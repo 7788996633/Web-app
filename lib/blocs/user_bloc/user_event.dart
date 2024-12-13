@@ -10,3 +10,9 @@ class GetUsersListByGroupId extends UserEvent {
 }
 
 class GetAllUsers extends UserEvent {}
+
+class GetUserById extends UserEvent {
+  final int userId;
+
+  GetUserById({required this.userId});
+}

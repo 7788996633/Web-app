@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 String myToken = '';
-String myUrl = 'http://192.168.1.101:8000/';
+String myUrl = 'http://192.168.1.100:8000/';
 
 Map myColors = {
   'backGround': Colors.white,

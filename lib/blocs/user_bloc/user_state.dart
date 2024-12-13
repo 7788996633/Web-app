@@ -24,3 +24,10 @@ final class UsersListLoaded extends UserState {
 
   UsersListLoaded({required this.usersList});
 }
+
+final class UserInfoById extends UserState {
+  final int userId;
+  final String userName;
+
+  UserInfoById({required this.userId, required this.userName});
+}

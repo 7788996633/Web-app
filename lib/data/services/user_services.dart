@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:webapp/data/models/user_model.dart';
+
 import '../../const.dart';
 import 'package:http/http.dart' as http;
 
@@ -53,6 +55,31 @@ class UserServices {
     } else {
       print(response.statusCode);
       return [];
+    }
+  }
+
+  Future<UserModel> getUserById(int userId) async {
+    var headers = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $myToken'
+    };
+    var request =
+        http.Request('GET', Uri.parse('${myUrl}api/getUserInfo/$userId'));
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse streamedResponse = await request.send();
+    var response = await http.Response.fromStream(streamedResponse);
+    if (response.statusCode == 200) {
+      var jsonResponse = json.decode(response.body);
+      print(jsonResponse);
+      final userJson = jsonResponse['user'];
+      final user = UserModel.fromJson(userJson);
+
+      return user;
+    } else {
+      print(response.statusCode);
+      return UserModel(id: -1, name: 'Something went wrong');
     }
   }
 }
