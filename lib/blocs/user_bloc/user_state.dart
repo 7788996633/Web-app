@@ -26,8 +26,7 @@ final class UsersListLoaded extends UserState {
 }
 
 final class UserInfoById extends UserState {
-  final int userId;
-  final String userName;
+  final UserModel userModel;
 
-  UserInfoById({required this.userId, required this.userName});
+  UserInfoById({required this.userModel});
 }
