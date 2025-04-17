@@ -24,7 +24,7 @@ class _SharedGroupListState extends State<SharedGroupsList> {
   Widget buildGroupList() {
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+        crossAxisCount: 3,
         childAspectRatio: 2,
       ),
       itemCount: groupList.length,

@@ -2,36 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:webapp/blocs/user_bloc/user_bloc.dart';
 import 'package:webapp/data/models/user_model.dart';
-import 'package:webapp/presentation/widgets/user_item.dart';
+import 'package:webapp/presentation/widgets/user_to_add_in_group_item.dart';
 
-class UserList extends StatefulWidget {
-  const UserList({super.key});
-
+class UsersToAddInGroupList extends StatefulWidget {
+  const UsersToAddInGroupList({super.key, required this.groupID});
+  final int groupID;
   @override
-  State<UserList> createState() => _UserListState();
+  State<UsersToAddInGroupList> createState() => _UserListState();
 }
 
-class _UserListState extends State<UserList> {
+class _UserListState extends State<UsersToAddInGroupList> {
   @override
   void initState() {
     BlocProvider.of<UserBloc>(context).add(
-      GetAllUsers(),
+      GetUsersNotInGroup(groupID: widget.groupID),
     );
     super.initState();
   }
 
   List<UserModel> userModel = [];
   Widget buildUserModel() {
-    return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        childAspectRatio: 2,
-      ),
-
+    return ListView.builder(
       itemCount: userModel.length,
       shrinkWrap: true,
       physics: const ClampingScrollPhysics(),
-      itemBuilder: (context, index) => UserItem(
+      itemBuilder: (context, index) => UserToAddInGroupItem(
+        groupID: widget.groupID,
         userModel: userModel[index],
       ),
     );

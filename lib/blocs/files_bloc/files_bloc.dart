@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:bloc/bloc.dart';
 import 'package:webapp/data/models/file_model.dart';
 import 'package:webapp/data/repositories/file_repositories.dart';
@@ -17,26 +19,19 @@ class FilesBloc extends Bloc<FilesEvent, FilesState> {
           FilesLoading(),
         );
         try {
-          String value =
-              await FileServices().upLoadFile(event.fileName, event.filePath);
-          emit(
-            FilesSuccess(
-              successmsg: value,
-            ),
-          );
+          String value = await FileServices()
+              .upLoadFile(event.groupID, event.fileName, event.fileBytes);
+          emit(FilesSuccess(successmsg: value));
         } catch (e) {
-          emit(
-            FilesFail(
-              errmsg: e.toString(),
-            ),
-          );
+          emit(FilesFail(errmsg: e.toString()));
         }
       } else if (event is DownLoadFile) {
         emit(
           FilesLoading(),
         );
         try {
-          String value = await FileServices().downLoadFile(event.fileId);
+          String value = await FileServices().downloadFile(event.fileId);
+          print(value + 'aaaaaaaaaaaaaaaaaaaaaaaaaaa');
           emit(
             FilesSuccess(
               successmsg: value,
@@ -72,10 +67,31 @@ class FilesBloc extends Bloc<FilesEvent, FilesState> {
           FilesLoading(),
         );
         try {
-          String value = await FileServices().checkOut(event.fileId);
+          String value = await FileServices()
+              .checkOut(event.fileId, event.fileName, event.fileBytes);
           emit(
             FilesSuccess(
               successmsg: value,
+            ),
+          );
+          print('sssssssssssssssssssssssssssssssssssssssssss');
+        } catch (e) {
+          emit(
+            FilesFail(
+              errmsg: e.toString(),
+            ),
+          );
+          print('fffffffffffffffffffffffffffffffffffff');
+        }
+      } else if (event is GetAllFiles) {
+        emit(
+          FilesLoading(),
+        );
+        try {
+          List<FileModel> value = await FileRepositories().getAllFiles();
+          emit(
+            FilesListLoaded(
+              filesList: value,
             ),
           );
         } catch (e) {
@@ -85,12 +101,31 @@ class FilesBloc extends Bloc<FilesEvent, FilesState> {
             ),
           );
         }
-      } else if (event is GetAllFiles) {
+      } else if (event is GetMyFiles) {
         emit(
           FilesLoading(),
         );
         try {
-          List<FileModel> value = await FileRepositories().getAllFiles();
+          List<FileModel> value = await FileRepositories().getMyFiles();
+          emit(
+            FilesListLoaded(
+              filesList: value,
+            ),
+          );
+        } catch (e) {
+          emit(
+            FilesFail(
+              errmsg: e.toString(),
+            ),
+          );
+        }
+      } else if (event is GetGroupFiles) {
+        emit(
+          FilesLoading(),
+        );
+        try {
+          List<FileModel> value =
+              await FileRepositories().getGroupFiles(event.groupID);
           emit(
             FilesListLoaded(
               filesList: value,

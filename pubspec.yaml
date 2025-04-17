@@ -39,6 +39,10 @@ dependencies:
   http: ^1.2.2
   meta: ^1.15.0
   file_picker: ^8.1.4
+  path_provider: ^2.1.5
+  open_file: ^3.5.10
+  universal_html: ^2.2.4
+  intl: ^0.20.1
 
 dev_dependencies:
   flutter_test:

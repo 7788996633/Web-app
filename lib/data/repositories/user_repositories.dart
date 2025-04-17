@@ -19,4 +19,13 @@ class UserRepositories {
         )
         .toList();
   }
+
+  Future<List<UserModel>> getUsersNotInGroup(int groupID) async {
+    var usersList = await UserServices().getUsersNotInGroup(groupID);
+    return usersList
+        .map(
+          (e) => UserModel.fromJson(e),
+        )
+        .toList();
+  }
 }

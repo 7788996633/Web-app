@@ -4,30 +4,32 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../../const.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:open_file/open_file.dart';
+import 'package:universal_html/html.dart' as html;
 
 class FileServices {
-  Future<String> upLoadFile(String fileName, String filepath) async {
+  Future<String> upLoadFile(
+      int groupID, String fileName, Uint8List fileBytes) async {
     var headers = {
       'Accept': 'application/json',
-      'Authorization': 'Bearer $myToken'
+      'Authorization': 'Bearer $myToken',
     };
     var request = http.MultipartRequest(
       'POST',
-      Uri.parse(
-        '${myUrl}api/uploadFile/1',
-      ),
+      Uri.parse('${myUrl}api/uploadFile/$groupID'),
     );
     request.fields.addAll({'fileName': fileName, 'status': '0'});
     request.files.add(
-      await http.MultipartFile.fromPath(
+      http.MultipartFile.fromBytes(
         'file',
-        filepath,
+        fileBytes,
+        filename: fileName,
       ),
     );
     request.headers.addAll(headers);
 
     var streamedResponse = await request.send();
-
     var response = await http.Response.fromStream(streamedResponse);
     var jsonResponse = json.decode(response.body);
 
@@ -40,13 +42,22 @@ class FileServices {
     }
   }
 
-  Future<String> checkOut(int fileId) async {
+  Future<String> checkOut(
+      int fileId, String fileName, Uint8List fileBytes) async {
     var headers = {
       'Accept': 'application/json',
       'Authorization': 'Bearer $myToken'
     };
     var request = http.MultipartRequest(
         'POST', Uri.parse('${myUrl}api/checkInFile/$fileId'));
+    request.files.add(
+      http.MultipartFile.fromBytes(
+        'file',
+        fileBytes,
+        filename: fileName,
+      ),
+    );
+
     request.headers.addAll(headers);
 
     var streamedResponse = await request.send();
@@ -85,68 +96,63 @@ class FileServices {
     }
   }
 
-  Future<String> downLoadFile(int fileId) async {
+  Future<String> downloadFile(int fileId) async {
     var headers = {
       'Accept': 'application/json',
-      'Authorization': 'Bearer $myToken'
+      'Authorization': 'Bearer $myToken',
     };
 
-    // قم بتكوين رابط API
     var url = Uri.parse('${myUrl}api/downloadFile/$fileId');
 
-    if (kIsWeb) {
-      try {
+    try {
+      if (kIsWeb) {
+        print('Running on Web');
         var response = await http.get(url, headers: headers);
-        var jsonResponse = json.decode(response.body);
-
         if (response.statusCode == 200) {
-          print(jsonResponse);
-
-          // هنا يمكنك استخدام آلية تحميل ملف في الويب مثل تحميل رابط مباشر
-          // على سبيل المثال، يمكنك عرض رابط للتحميل:
-          var downloadUrl = jsonResponse['filePath'];
-          print('File download URL: $downloadUrl');
-
-          return jsonResponse['message'];
+          print('Download successful on Web');
+          final blob = html.Blob([response.bodyBytes]);
+          final downloadUrl = html.Url.createObjectUrlFromBlob(blob);
+          final anchor = html.AnchorElement(href: downloadUrl)
+            ..setAttribute('download', 'downloaded_file') // اسم الملف
+            ..click(); // يبدأ التنزيل
+          html.Url.revokeObjectUrl(downloadUrl);
+          return 'File is downloading on web.';
         } else {
-          print(jsonResponse);
-
+          print('Download failed on Web: ${response.statusCode}');
           return 'Error: ${response.statusCode} - ${response.reasonPhrase}';
         }
-      } catch (e) {
-        print('Error downloading file: $e');
-        return 'Error: $e';
-      }
-    } else {
-      // إذا كان التطبيق يعمل على Android
-      try {
-        var request = http.Request('GET', url);
-        request.headers.addAll(headers);
-
-        // إرسال الطلب وتنزيل الملف
-        var streamedResponse = await request.send();
-        var response = await http.Response.fromStream(streamedResponse);
-        var jsonResponse = json.decode(response.body);
-
+      } else {
+        print('Running on Mobile/Desktop');
+        var response = await http.get(url, headers: headers);
         if (response.statusCode == 200) {
-          print(jsonResponse);
+          print('Download successful on Mobile/Desktop');
+          var contentDisposition = response.headers['content-disposition'];
+          var fileName = contentDisposition
+                  ?.split(';')
+                  .firstWhere(
+                      (element) => element.trim().startsWith('filename='))
+                  .split('=')
+                  .last
+                  .replaceAll('"', '') ??
+              'downloaded_file';
 
-          // حفظ الملف في الجهاز (على Android فقط)
-          File file =
-              File('/storage/emulated/0/Download/${jsonResponse['fileName']}');
+          Directory tempDir = await getApplicationDocumentsDirectory();
+          String tempPath = tempDir.path;
+          File file = File('$tempPath/$fileName');
           await file.writeAsBytes(response.bodyBytes);
 
-          print('File downloaded to ${file.path}');
-          return jsonResponse['message'];
-        } else {
-          print(jsonResponse);
+          print('File downloaded to: ${file.path}');
+          await OpenFile.open(file.path);
 
+          return 'File downloaded and opened: ${file.path}';
+        } else {
+          print('Download failed on Mobile/Desktop: ${response.statusCode}');
           return 'Error: ${response.statusCode} - ${response.reasonPhrase}';
         }
-      } catch (e) {
-        print('Error downloading file: $e');
-        return 'Error: $e';
       }
+    } catch (e) {
+      print('Unexpected error: $e');
+      return 'Error downloading file: $e';
     }
   }
 
@@ -189,6 +195,53 @@ class FileServices {
       var jsonResponse = json.decode(response.body);
       print(jsonResponse);
       return jsonResponse['Files'];
+    } else {
+      print(response.statusCode);
+
+      return [];
+    }
+  }
+
+  Future<List> getMyFiles() async {
+    var headers = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $myToken'
+    };
+    var request = http.Request('GET', Uri.parse('${myUrl}api/getFileBrooked'));
+
+    request.headers.addAll(headers);
+
+    var streamedResponse = await request.send();
+
+    var response = await http.Response.fromStream(streamedResponse);
+    if (response.statusCode == 200) {
+      var jsonResponse = json.decode(response.body);
+      print(jsonResponse);
+      return jsonResponse['files'];
+    } else {
+      print(response.statusCode);
+
+      return [];
+    }
+  }
+
+  Future<List> getGroupFiles(int groupID) async {
+    var headers = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $myToken'
+    };
+    var request = http.Request(
+        'GET', Uri.parse('${myUrl}api/getFilesByGroupId/$groupID'));
+
+    request.headers.addAll(headers);
+
+    var streamedResponse = await request.send();
+
+    var response = await http.Response.fromStream(streamedResponse);
+    if (response.statusCode == 200) {
+      var jsonResponse = json.decode(response.body);
+      print(jsonResponse);
+      return jsonResponse['files'];
     } else {
       print(response.statusCode);
 

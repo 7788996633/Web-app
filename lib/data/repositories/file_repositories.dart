@@ -13,6 +13,24 @@ class FileRepositories {
         .toList();
   }
 
+  Future<List<FileModel>> getMyFiles() async {
+    var fileList = await FileServices().getMyFiles();
+    return fileList
+        .map(
+          (e) => FileModel.fromJson(e),
+        )
+        .toList();
+  }
+
+  Future<List<FileModel>> getGroupFiles(int groupID) async {
+    var fileList = await FileServices().getGroupFiles(groupID);
+    return fileList
+        .map(
+          (e) => FileModel.fromJson(e),
+        )
+        .toList();
+  }
+
   Future<List<FileReportModel>> getFileReports(int fileId) async {
     var reportList = await FileServices().getFileReports(fileId);
     return reportList
@@ -21,5 +39,4 @@ class FileRepositories {
         )
         .toList();
   }
-
 }

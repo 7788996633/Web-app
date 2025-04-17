@@ -25,8 +25,12 @@ final class UsersListLoaded extends UserState {
   UsersListLoaded({required this.usersList});
 }
 
-final class UserInfoById extends UserState {
+final class UserInfoByIdLoaded extends UserState {
   final UserModel userModel;
 
-  UserInfoById({required this.userModel});
+  UserInfoByIdLoaded({required this.userModel});
 }
+
+final class UserRoleIsAdmin extends UserState {}
+
+final class UserRoleIsMember extends UserState {}

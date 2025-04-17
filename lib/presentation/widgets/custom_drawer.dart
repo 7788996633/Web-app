@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:webapp/blocs/change_color_mode_bloc/change_color_mode_bloc.dart';
 import 'package:webapp/const.dart';
+import 'package:webapp/data/services/login_services.dart';
+
+import '../../cubits/login_cubit/login_cubit.dart';
+import '../screens/auth_screens/login_screen.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer(
@@ -60,7 +64,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     onTap: _toggleDrawer,
                     child: DrawerHeader(
                       child: Center(
-                        child: Row(
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
@@ -113,6 +117,32 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                   );
                                 },
                               ),
+                            if (value)
+                              IconButton(
+                                onPressed: () async {
+                                  String message =
+                                      await LoginServices().logOut();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(message),
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 59, 61, 169),
+                                    ),
+                                  );
+                                  Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                      builder: (context) => BlocProvider(
+                                        create: (context) => LoginCubit(),
+                                        child: const LoginScreen(),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                icon: Icon(
+                                  color: myColors['IconColor'],
+                                  Icons.logout,
+                                ),
+                              ),
                           ],
                         ),
                       ),
@@ -122,6 +152,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   _buildListTile(1, 'All Files', Icons.file_copy, value, null),
                   _buildListTile(2, 'All Groups', Icons.groups, value, null),
                   _buildListTile(3, 'All Users', Icons.person, value, null),
+                  _buildListTile(4, 'My Files', Icons.file_copy, value, null),
                 ],
               ),
             ),

@@ -17,6 +17,20 @@ class AddUserToGroup extends GroupEvent {
   AddUserToGroup({required this.groupId, required this.userId});
 }
 
+class DeleteUserFromGroup extends GroupEvent {
+  final int groupId;
+  final int userId;
+
+  DeleteUserFromGroup({required this.groupId, required this.userId});
+}
+
+class DeleteFileFromGroup extends GroupEvent {
+  final int groupId;
+  final int fileId;
+
+  DeleteFileFromGroup({required this.groupId, required this.fileId});
+}
+
 class GetAllGroups extends GroupEvent {}
 
 class GetSharedGroups extends GroupEvent {

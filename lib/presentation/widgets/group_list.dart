@@ -24,8 +24,8 @@ class _GroupListState extends State<GroupList> {
   Widget buildGroupList() {
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 4,
+        crossAxisCount: 3,
+        childAspectRatio: 2,
       ),
       itemCount: groupList.length,
       shrinkWrap: true,

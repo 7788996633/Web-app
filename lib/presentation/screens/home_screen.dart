@@ -30,88 +30,43 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Card(
-                  color: Colors.purpleAccent,
-                  child: Column(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          if (kIsWeb) {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  contentPadding: const EdgeInsets.all(20),
-                                  content: const UploadFileSheet(),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(),
-                                      child: const Text('Close'),
-                                    ),
-                                  ],
-                                );
-                              },
+            Card(
+              color: Colors.purpleAccent,
+              child: Column(
+                children: [
+                  const Text("Create Group"),
+                  IconButton(
+                    onPressed: () {
+                      if (kIsWeb) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              contentPadding: const EdgeInsets.all(20),
+                              content: const CreateGroupSheet(),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: const Text('Close'),
+                                ),
+                              ],
                             );
-                          } else {
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              builder: (BuildContext context) {
-                                return const UploadFileSheet();
-                              },
-                            );
-                          }
-                        },
-                        icon: const Icon(Icons.upload_file),
-                      ),
-                      const Text("Upload File"),
-                    ],
+                          },
+                        );
+                      } else {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (BuildContext context) {
+                            return const CreateGroupSheet();
+                          },
+                        );
+                      }
+                    },
+                    icon: const Icon(Icons.add),
                   ),
-                ),
-                Card(
-                  color: Colors.purpleAccent,
-                  child: Column(
-                    children: [
-                      const Text("Create Group"),
-                      IconButton(
-                        onPressed: () {
-                          if (kIsWeb) {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  contentPadding: const EdgeInsets.all(20),
-                                  content: const CreateGroupSheet(),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(),
-                                      child: const Text('Close'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          } else {
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              builder: (BuildContext context) {
-                                return const CreateGroupSheet();
-                              },
-                            );
-                          }
-                        },
-                        icon: const Icon(Icons.add),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
             const Text("Recent Files"),
             BlocProvider(
@@ -121,14 +76,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: const LatestFilesList(),
               ),
             ),
-            const Card(
-              color: Colors.purpleAccent,
-              child: Column(
-                children: [
-                  Text("Latest Updates"),
-                ],
-              ),
-            ),
+            // const Card(
+            //   color: Colors.purpleAccent,
+            //   child: Column(
+            //     children: [
+            //       Text("Latest Updates"),
+            //     ],
+            //   ),
+            // ),
           ],
         ),
       ),

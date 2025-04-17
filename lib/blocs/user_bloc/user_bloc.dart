@@ -38,7 +38,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
             UserModel value = await UserServices().getUserById(event.userId);
             if (value.id != -1) {
               emit(
-                UserInfoById(
+                UserInfoByIdLoaded(
                   userModel: value,
                 ),
               );
@@ -67,6 +67,54 @@ class UserBloc extends Bloc<UserEvent, UserState> {
                 usersList: value,
               ),
             );
+          } catch (e) {
+            emit(
+              UserFail(
+                errmsg: e.toString(),
+              ),
+            );
+          }
+        } else if (event is GetUsersNotInGroup) {
+          emit(
+            UserLoading(),
+          );
+          try {
+            List<UserModel> value =
+                await UserRepositories().getUsersNotInGroup(event.groupID);
+            emit(
+              UsersListLoaded(
+                usersList: value,
+              ),
+            );
+          } catch (e) {
+            emit(
+              UserFail(
+                errmsg: e.toString(),
+              ),
+            );
+          }
+        } else if (event is GetUserRole) {
+          emit(
+            UserLoading(),
+          );
+          try {
+            String role =
+                await UserServices().getUserRoleInGroup(event.groupId);
+              if (role == 'owner') {
+                emit(
+                  UserRoleIsAdmin(),
+                );
+              } else if (role == 'user') {
+                emit(
+                  UserRoleIsMember(),
+                );
+              } else {
+                emit(
+                  UserFail(
+                    errmsg: role,
+                  ),
+                );
+              }
           } catch (e) {
             emit(
               UserFail(

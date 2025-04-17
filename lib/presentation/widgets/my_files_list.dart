@@ -1,50 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:webapp/blocs/user_bloc/user_bloc.dart';
-import 'package:webapp/data/models/user_model.dart';
-import 'package:webapp/presentation/widgets/user_item.dart';
+import 'package:webapp/blocs/files_bloc/files_bloc.dart';
+import 'package:webapp/data/models/file_model.dart';
+import 'package:webapp/presentation/widgets/my_files_item.dart';
 
-class UserList extends StatefulWidget {
-  const UserList({super.key});
+class MyFilesList extends StatefulWidget {
+  const MyFilesList({super.key});
 
   @override
-  State<UserList> createState() => _UserListState();
+  State<MyFilesList> createState() => _MyFilesListState();
 }
 
-class _UserListState extends State<UserList> {
+class _MyFilesListState extends State<MyFilesList> {
   @override
   void initState() {
-    BlocProvider.of<UserBloc>(context).add(
-      GetAllUsers(),
+    BlocProvider.of<FilesBloc>(context).add(
+      GetMyFiles(),
     );
     super.initState();
   }
 
-  List<UserModel> userModel = [];
-  Widget buildUserModel() {
-    return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        childAspectRatio: 2,
-      ),
-
-      itemCount: userModel.length,
+  List<FileModel> myFilesList = [];
+  Widget buildMyFilesList() {
+    return ListView.builder(
+      itemCount: myFilesList.length,
       shrinkWrap: true,
       physics: const ClampingScrollPhysics(),
-      itemBuilder: (context, index) => UserItem(
-        userModel: userModel[index],
+      itemBuilder: (context, index) => MyFilesItem(
+        file: GetAllFiles(),
+        fileModel: myFilesList[index],
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<UserBloc, UserState>(
+    return BlocBuilder<FilesBloc, FilesState>(
       builder: (context, state) {
-        if (state is UsersListLoaded) {
-          userModel = state.usersList;
-          return buildUserModel();
-        } else if (state is UserFail) {
+        if (state is FilesListLoaded) {
+          myFilesList = state.filesList;
+          return buildMyFilesList();
+        } else if (state is FilesFail) {
           return Column(
             children: [
               const Text(

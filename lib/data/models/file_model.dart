@@ -1,23 +1,23 @@
 class FileModel {
   final int id;
   final String fileName;
-  final String filePath;
+  // final String filePath;
   final int status;
-  final int groupId;
-  final int userId;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  // final int groupId;
+  // final int userId;
+  // final DateTime createdAt;
+  // final DateTime updatedAt;
   late final String fileType;
 
   FileModel({
     required this.id,
     required this.fileName,
-    required this.filePath,
+    // required this.filePath,
     required this.status,
-    required this.groupId,
-    required this.userId,
-    required this.createdAt,
-    required this.updatedAt,
+    // required this.groupId,
+    // required this.userId,
+    // required this.createdAt,
+    // required this.updatedAt,
   }) {
     fileType = _extractFileType(fileName);
   }
@@ -30,16 +30,16 @@ class FileModel {
     return FileModel(
       id: json['id'],
       fileName: json['fileName'],
-      filePath: json['filePath'],
+      // filePath: json['filePath'],
       status: json['status'],
-      groupId: json['group_id'],
-      userId: json['user_id'],
-      createdAt: DateTime.parse(
-        json['created_at'],
-      ),
-      updatedAt: DateTime.parse(
-        json['updated_at'],
-      ),
+      // groupId: json['group_id'],
+      // userId: json['user_id'],
+      // createdAt: DateTime.parse(
+      //   json['created_at'],
+      // ),
+      // updatedAt: DateTime.parse(
+      //   json['updated_at'],
+      // ),
     );
   }
 }

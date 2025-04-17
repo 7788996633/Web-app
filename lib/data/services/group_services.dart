@@ -32,16 +32,68 @@ class GroupServices {
       'Authorization': 'Bearer $myToken'
     };
     var request = http.MultipartRequest(
-        'POST', Uri.parse('${myUrl}api/AddUser_Group/2/3'));
+        'POST', Uri.parse('${myUrl}api/AddUser_Group/$userId/$groupId'));
     request.headers.addAll(headers);
 
     var streamedResponse = await request.send();
 
     var response = await http.Response.fromStream(streamedResponse);
+    var jsonResponse = json.decode(response.body);
+
     if (response.statusCode == 200) {
-      var jsonResponse = json.decode(response.body);
+      print(jsonResponse);
       return jsonResponse['message'];
     } else {
+      print(jsonResponse);
+
+      return 'Error: ${response.statusCode} - ${response.reasonPhrase}';
+    }
+  }
+
+  Future<String> deleteUserFromGroup(int groupId, int userId) async {
+    var headers = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $myToken'
+    };
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('${myUrl}api/DeleteUserFromGroup/$userId/$groupId'));
+    request.headers.addAll(headers);
+
+    var streamedResponse = await request.send();
+
+    var response = await http.Response.fromStream(streamedResponse);
+    var jsonResponse = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      print(jsonResponse);
+      return jsonResponse['message'];
+    } else {
+      print(jsonResponse);
+
+      return 'Error: ${response.statusCode} - ${response.reasonPhrase}';
+    }
+  }
+
+  Future<String> deleteFileFromGroup(int groupId, int fileID) async {
+    var headers = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $myToken'
+    };
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('${myUrl}api/DeleteFileFromGroup/$fileID/$groupId'));
+    request.headers.addAll(headers);
+
+    var streamedResponse = await request.send();
+
+    var response = await http.Response.fromStream(streamedResponse);
+    var jsonResponse = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      print(jsonResponse);
+      return jsonResponse['message'];
+    } else {
+      print(jsonResponse);
+
       return 'Error: ${response.statusCode} - ${response.reasonPhrase}';
     }
   }
@@ -57,18 +109,25 @@ class GroupServices {
         '${myUrl}api/CreateGroupAndAddUser/$userId',
       ),
     );
-    request.fields.addAll(
-      {'name': groupName, 'description': 'aaaa'},
-    );
+    request.fields.addAll({
+      'name': groupName,
+      'description': 'bla bla bla kfksdk kkkkkkksd pedks'
+    });
+
     request.headers.addAll(headers);
 
     var streamedResponse = await request.send();
 
     var response = await http.Response.fromStream(streamedResponse);
+    var jsonResponse = json.decode(response.body);
+
     if (response.statusCode == 200) {
-      var jsonResponse = json.decode(response.body);
+      print(jsonResponse);
+
       return jsonResponse['message'];
     } else {
+      print(jsonResponse);
+
       return 'Error: ${response.statusCode} - ${response.reasonPhrase}';
     }
   }

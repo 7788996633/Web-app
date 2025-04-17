@@ -66,6 +66,63 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
             ),
           );
         }
+      } else if (event is AddUserToGroup) {
+        emit(
+          GroupLoading(),
+        );
+        try {
+          String value =
+              await GroupServices().addUserToGroup(event.groupId, event.userId);
+          emit(
+            GroupSuccess(
+              successmsg: value,
+            ),
+          );
+        } catch (e) {
+          emit(
+            GroupFail(
+              errmsg: e.toString(),
+            ),
+          );
+        }
+      } else if (event is DeleteFileFromGroup) {
+        emit(
+          GroupLoading(),
+        );
+        try {
+          String value = await GroupServices()
+              .deleteFileFromGroup(event.groupId, event.fileId);
+          emit(
+            GroupSuccess(
+              successmsg: value,
+            ),
+          );
+        } catch (e) {
+          emit(
+            GroupFail(
+              errmsg: e.toString(),
+            ),
+          );
+        }
+      } else if (event is DeleteUserFromGroup) {
+        emit(
+          GroupLoading(),
+        );
+        try {
+          String value = await GroupServices()
+              .deleteUserFromGroup(event.groupId, event.userId);
+          emit(
+            GroupSuccess(
+              successmsg: value,
+            ),
+          );
+        } catch (e) {
+          emit(
+            GroupFail(
+              errmsg: e.toString(),
+            ),
+          );
+        }
       } else if (event is GetSharedGroups) {
         emit(
           GroupLoading(),

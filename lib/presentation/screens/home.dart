@@ -6,6 +6,8 @@ import 'package:webapp/presentation/screens/all_files_screen.dart';
 import 'package:webapp/presentation/screens/all_groups_screen.dart';
 import 'package:webapp/presentation/screens/all_users_screen.dart';
 import 'package:webapp/presentation/screens/home_screen.dart';
+import 'package:webapp/presentation/screens/log_out_screen.dart';
+import 'package:webapp/presentation/screens/my_files_screen.dart';
 import 'package:webapp/presentation/widgets/custom_drawer.dart';
 
 class Home extends StatefulWidget {
@@ -23,6 +25,9 @@ class _CustomScaffoldState extends State<Home> {
     const AllFilesScreen(),
     const AllGroupsScreen(),
     const AllUsersScreen(),
+    const MyFilesScreen(),
+        const LogOutScreen(),
+
   ];
 
   void _onItemTapped(int index) {
