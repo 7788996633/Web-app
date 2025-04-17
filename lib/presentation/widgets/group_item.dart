@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:webapp/const.dart';
 import 'package:webapp/data/models/group_model.dart';
+
+import '../../blocs/user_bloc/user_bloc.dart';
+import '../screens/group_info_screen.dart';
 
 class GroupItem extends StatelessWidget {
   const GroupItem({super.key, required this.groupModel});
