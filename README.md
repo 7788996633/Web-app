@@ -1,16 +1,44 @@
-# webapp
+📁 Collaborative File Management System
+This is a Flutter application developed as part of a team collaboration and document management solution.
+It enables users to manage, share, and collaborate on files efficiently through a structured group-based access system.
 
-A new Flutter project.
+📱 About the Project
+This is a collaborative file management system built with Flutter, applying Clean Code principles and BLoC architecture for scalable and maintainable state management.
 
-## Getting Started
+The system allows users to:
 
-This project is a starting point for a Flutter application.
+Organize files under custom shared groups.
 
-A few resources to get you started if this is your first Flutter project:
+Check-in/check-out files to prevent simultaneous editing.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Upload and manage versions of files.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Work with role-based file access.
+
+🛠️ Key Features
+Clean and scalable Flutter architecture.
+
+State management using BLoC.
+
+Group-based file organization and access control.
+
+File check-in/check-out mechanism to prevent edit conflicts.
+
+Version control and backup system for every file update.
+
+Notifications on file status changes.
+
+Support for up to 100 concurrent users.
+
+User-friendly and intuitive UI.
+
+Compatibility with mobile, tablet, and desktop platforms.
+
+File format support for PDF, CSV, and more.
+
+Ability to create and manage shared collaboration groups.
+
+📸 Screenshots
+You can find full screenshots of the app inside the screenshots/ folder.
+
+ 
